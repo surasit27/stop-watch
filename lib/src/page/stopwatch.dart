@@ -2,24 +2,23 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:stopwatch/src/app_route.dart';
-import 'package:stopwatch/src/bloc/timer_bloc/timer_bloc.dart';
+import 'package:stopwatch/src/bloc/stop_bloc/stop_bloc.dart';
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+class StopWatch extends StatefulWidget {
+  const StopWatch({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<StopWatch> createState() => _StopWatchState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _StopWatchState extends State<StopWatch> {
   Duration duration = const Duration();
   Timer? timer;
-  static const countdownDuration = Duration(minutes: 5);
+  static const countdownDuration = Duration();
 
-  bool isCountdown = true;
+  bool isRunTime = true;
 
   @override
   void initState() {
@@ -28,7 +27,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void reset() {
-    if (isCountdown) {
+    if (isRunTime) {
       setState(() => duration = countdownDuration);
     } else {
       setState(() => duration = const Duration());
@@ -39,19 +38,25 @@ class _MyHomePageState extends State<MyHomePage> {
     if (resets) {
       reset();
     }
-    timer = Timer.periodic(const Duration(seconds: 1), (_) => addTime());
+    timer = Timer.periodic(const Duration(milliseconds: 1), (_) => addTime());
   }
 
   void addTime() {
-    final addSecons = isCountdown ? -1 : 1;
+    final addmilliseconds = isRunTime ? 1 : 1;
     setState(() {
-      final seconds = duration.inSeconds + addSecons;
-      if (seconds < 0) {
-        timer?.cancel();
-      } else {
-        duration = Duration(seconds: seconds);
-      }
+      final milliseconds = duration.inMilliseconds + addmilliseconds;
+      duration = Duration(milliseconds: milliseconds);
     });
+    //final addSecons = isCountdown ? -1 : 1;
+    // final addSecons = isRunTime ? 1 : 1;
+    // setState(() {
+    //   final seconds = duration.inSeconds + addSecons;
+    //   if (seconds < 0) {
+    //     timer?.cancel();
+    //   } else {
+    //     duration = Duration(seconds: seconds);
+    //   }
+    // });
   }
 
   void stopTimer({bool resets = true}) {
@@ -66,19 +71,11 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
-        actions: [
-          IconButton(
-              onPressed: () => Navigator.pushNamed(context, AppRoute.stopwatch),
-              icon: const Icon(Icons.navigate_next))
-        ],
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            _timerBuild(),
-            _buildStart(),
-          ],
+          children: <Widget>[_timerBuild(), _buildStart()],
         ),
       ),
     );
@@ -106,7 +103,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         style: TextStyle(fontSize: 20),
                       )
                     : const Text(
-                        'STAST',
+                        'RESUME',
                         style: TextStyle(fontSize: 20),
                       ),
               ),
@@ -138,12 +135,13 @@ class _MyHomePageState extends State<MyHomePage> {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
     final minutes = twoDigits(duration.inMinutes.remainder(60));
     final seconds = twoDigits(duration.inSeconds.remainder(60));
-    return BlocBuilder<TimerBloc, TimerState>(
+    final milliseconds = twoDigits(duration.inMilliseconds.remainder(60));
+    return BlocBuilder<StopBloc, StopState>(
       builder: (context, state) {
         return Text(
-          '$minutes : $seconds ',
+          ' $seconds s : $milliseconds',
           style: const TextStyle(
-            fontSize: 80,
+            fontSize: 70,
             color: Colors.black,
             fontWeight: FontWeight.bold,
           ),

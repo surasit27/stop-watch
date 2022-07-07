@@ -1,10 +1,14 @@
 part of 'timer_bloc.dart';
 
 class TimerState extends Equatable {
-  const TimerState();
-
-  // TimerState copyWith() {}
+  final minutes;
+  const TimerState({required this.minutes});
 
   @override
-  List<Object> get props => [];
+  String toString() {
+    return "minutes: $minutes";
+  }
+
+  @override
+  List<Object> get props => [minutes];
 }

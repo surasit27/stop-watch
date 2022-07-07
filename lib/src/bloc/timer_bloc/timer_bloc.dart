@@ -5,26 +5,17 @@ part 'timer_event.dart';
 part 'timer_state.dart';
 
 class TimerBloc extends Bloc<TimerEvent, TimerState> {
-  TimerBloc() : super(TimerState()) {
-
+  TimerBloc() : super(const TimerState(minutes: 0)) {
     //Start Timer
-    on<TimerEventStart>((event, emit) {
-     
-    });
+    on<TimerEventStart>((event, emit) {});
 
     //Stop Timer
-    on<TimerEventStop>((event, emit) {
-     
-    });
+    on<TimerEventStop>((event, emit) {});
 
     //Resume Timer
-    on<TimerEventResume>((event, emit) {
-     
-    });
+    on<TimerEventResume>((event, emit) {});
 
     //Start Reset
-    on<TimerEventReset>((event, emit) {
-     
-    });
+    on<TimerEventReset>((event, emit) {});
   }
 }
